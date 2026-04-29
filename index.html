@@ -1,0 +1,899 @@
+<!-- PIX -->
+navigator.clipboard.writeText('mfrgsinovacoes@gmail.com');
+
+<!-- WhatsApp -->
+<a href="https://wa.me/5571999120991?text=Oi! Gostei da prévia! Pix enviado para mfrgsinovacoes@gmail.com" target="_blank">
+
+<!-- Ou no JS -->
+window.open('https://wa.me/5571999120991?text=Oi! Pix enviado: mfrgsinovacoes@gmail.com');
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadshotAI — Retratos Profissionais com IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple-deep: #0d0818;
+      --purple-mid: #1a1040;
+      --purple-accent: #7c3aed;
+      --purple-light: #a78bfa;
+      --purple-pale: #c4b5fd;
+      --pink-accent: #ec4899;
+      --green-accent: #10b981;
+      --text-main: #f5f0ff;
+      --text-muted: #9d8ecf;
+      --text-dim: #5e4f8a;
+      --card-bg: rgba(255,255,255,0.06);
+      --card-border: rgba(167,139,250,0.2);
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 26px;
+      --radius-full: 999px;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--purple-deep);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient background */
+    body::before {
+      content: '';
+      position: fixed;
+      width: 600px; height: 600px;
+      top: -200px; left: -200px;
+      background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      width: 500px; height: 500px;
+      bottom: -150px; right: -150px;
+      background: radial-gradient(circle, rgba(236,72,153,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Noise overlay */
+    .noise {
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* Screens */
+    .screen { display: none; position: relative; z-index: 1; }
+    .screen.active { display: block; }
+
+    /* ─── LANDING ─── */
+    #screen-landing {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(124,58,237,0.2);
+      border: 0.5px solid rgba(167,139,250,0.4);
+      border-radius: var(--radius-full);
+      padding: 6px 16px;
+      font-size: 12px;
+      color: var(--purple-pale);
+      letter-spacing: 0.5px;
+      margin-bottom: 2.5rem;
+      font-family: var(--font-display);
+      font-weight: 500;
+      animation: fadeUp 0.6s ease both;
+    }
+    .badge::before { content: '●'; color: var(--purple-light); font-size: 8px; }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(52px, 12vw, 96px);
+      line-height: 0.95;
+      text-align: center;
+      letter-spacing: -2px;
+      margin-bottom: 1.25rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #a78bfa 0%, #ec4899 60%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 400px;
+      line-height: 1.65;
+      margin-bottom: 3rem;
+      font-weight: 300;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .styles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .style-card {
+      background: var(--card-bg);
+      border: 0.5px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 0.75rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(12px);
+    }
+    .style-card:hover {
+      background: rgba(124,58,237,0.15);
+      border-color: var(--purple-light);
+      transform: translateY(-4px);
+    }
+    .style-card.selected {
+      background: rgba(124,58,237,0.22);
+      border-color: var(--purple-accent);
+      box-shadow: 0 0 0 1px rgba(124,58,237,0.5);
+    }
+    .style-icon { font-size: 24px; margin-bottom: 8px; display: block; }
+    .style-name { font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--text-main); }
+    .style-desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 1rem 2.5rem;
+      border-radius: var(--radius-full);
+      border: none;
+      background: linear-gradient(135deg, #7c3aed, #a855f7, #ec4899);
+      color: #fff;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.3px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .cta-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover::after { opacity: 1; }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124,58,237,0.45); }
+    .cta-btn:active { transform: scale(0.98); }
+    .cta-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+    .cta-btn .arrow { transition: transform 0.2s; }
+    .cta-btn:hover .arrow { transform: translateX(4px); }
+
+    .footer-strip {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      animation: fadeUp 0.6s 0.5s ease both;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .footer-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--purple-light); }
+    .footer-ver {
+      font-size: 10px;
+      color: rgba(94,79,138,0.7);
+      letter-spacing: 2px;
+      font-family: var(--font-display);
+    }
+
+    /* ─── UPLOAD ─── */
+    #screen-upload {
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .back-btn {
+      background: var(--card-bg);
+      border: 0.5px solid var(--card-border);
+      color: var(--purple-pale);
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-body);
+      transition: all 0.2s;
+    }
+    .back-btn:hover { background: rgba(167,139,250,0.12); border-color: var(--purple-light); }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 1.75rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      font-family: var(--font-display);
+      font-weight: 500;
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 0.5px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-main);
+      font-size: 14px;
+      font-family: var(--font-body);
+      margin-bottom: 1.5rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239d8ecf' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      transition: border-color 0.2s;
+    }
+    .form-select:focus { border-color: var(--purple-light); }
+    .form-select option { background: #1a1040; }
+
+    .dropzone {
+      border: 1.5px dashed rgba(167,139,250,0.35);
+      border-radius: var(--radius-md);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 1rem;
+      position: relative;
+      backdrop-filter: blur(8px);
+    }
+    .dropzone:hover, .dropzone.over {
+      border-color: var(--purple-light);
+      background: rgba(124,58,237,0.08);
+    }
+    .dropzone input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    .dz-icon-wrap {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: rgba(124,58,237,0.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin: 0 auto 1rem;
+    }
+    .dz-text { font-family: var(--font-display); font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+    .dz-hint { font-size: 13px; color: var(--text-muted); }
+
+    .file-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+      min-height: 0;
+    }
+    .chip {
+      background: rgba(124,58,237,0.18);
+      border: 0.5px solid rgba(167,139,250,0.35);
+      border-radius: var(--radius-full);
+      padding: 4px 12px;
+      font-size: 11px;
+      color: var(--purple-pale);
+    }
+
+    .tip-box {
+      background: rgba(167,139,250,0.08);
+      border: 0.5px solid rgba(167,139,250,0.2);
+      border-radius: var(--radius-sm);
+      padding: 0.875rem 1rem;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .tip-box strong { color: var(--purple-pale); }
+
+    /* ─── LOADING ─── */
+    #screen-loading {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .spinner-ring {
+      width: 64px; height: 64px;
+      border: 3px solid rgba(167,139,250,0.2);
+      border-top-color: var(--purple-accent);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 2rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .loading-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 2rem; }
+
+    .progress-track {
+      width: 260px;
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7c3aed, #ec4899);
+      border-radius: 2px;
+      animation: progressAnim 2.5s ease-in-out forwards;
+      width: 0;
+    }
+    @keyframes progressAnim { 0%{width:0} 60%{width:70%} 90%{width:92%} 100%{width:100%} }
+
+    .loading-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 2rem;
+    }
+    .loading-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-dim);
+      transition: color 0.3s;
+    }
+    .loading-step.done { color: var(--purple-pale); }
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .loading-step.done .step-dot { background: var(--purple-light); }
+
+    /* ─── PREVIEW ─── */
+    #screen-preview {
+      min-height: 100vh;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .success-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16,185,129,0.15);
+      border: 0.5px solid rgba(16,185,129,0.35);
+      border-radius: var(--radius-full);
+      padding: 6px 16px;
+      font-size: 12px;
+      color: #6ee7b7;
+      margin-bottom: 1.25rem;
+      font-family: var(--font-display);
+      font-weight: 500;
+    }
+    .success-pill::before { content: '✓'; font-weight: 700; }
+
+    .preview-title {
+      font-family: var(--font-display);
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+    .preview-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .preview-img-wrap {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 1.75rem;
+      max-width: 300px;
+    }
+    .preview-img-wrap img {
+      width: 100%;
+      display: block;
+    }
+    .watermark-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(13,8,24,0.35);
+      backdrop-filter: blur(1px);
+    }
+    .wm-badge {
+      background: rgba(13,8,24,0.7);
+      color: rgba(196,181,253,0.8);
+      font-size: 11px;
+      padding: 6px 18px;
+      border-radius: var(--radius-full);
+      letter-spacing: 1.5px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      transform: rotate(-18deg);
+      border: 0.5px solid rgba(167,139,250,0.3);
+    }
+
+    .pkg-section-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      margin-bottom: 0.875rem;
+    }
+
+    .pkg-card {
+      background: var(--card-bg);
+      border: 0.5px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      transition: all 0.2s;
+      cursor: default;
+      backdrop-filter: blur(8px);
+    }
+    .pkg-card.featured {
+      border-color: var(--purple-accent);
+      background: rgba(124,58,237,0.12);
+    }
+    .pkg-card:hover { border-color: var(--purple-light); }
+    .pkg-badge {
+      display: inline-block;
+      background: rgba(124,58,237,0.3);
+      color: var(--purple-pale);
+      font-size: 10px;
+      padding: 2px 10px;
+      border-radius: var(--radius-full);
+      margin-bottom: 6px;
+      font-family: var(--font-display);
+      font-weight: 700;
+    }
+    .pkg-name { font-family: var(--font-display); font-size: 15px; font-weight: 700; }
+    .pkg-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+    .pkg-price { text-align: right; flex-shrink: 0; margin-left: 1rem; }
+    .pkg-price-main { font-family: var(--font-display); font-size: 26px; font-weight: 800; color: var(--purple-light); }
+    .pkg-price-sub { font-size: 11px; color: var(--text-dim); }
+
+    .pay-section { margin-top: 1.5rem; }
+    .pay-btn {
+      width: 100%;
+      padding: 1rem;
+      border-radius: var(--radius-full);
+      border: none;
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 0.625rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.2px;
+    }
+    .pay-btn:hover { transform: translateY(-2px); }
+    .pay-btn:active { transform: scale(0.98); }
+    .pay-pix { background: linear-gradient(135deg, #5b21b6, #7c3aed); box-shadow: 0 6px 24px rgba(92,33,182,0.35); }
+    .pay-whats { background: linear-gradient(135deg, #15803d, #16a34a); box-shadow: 0 6px 24px rgba(22,163,74,0.3); }
+
+    .how-it-works {
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin-top: 1.25rem;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 2;
+    }
+    .how-it-works strong { color: var(--purple-pale); font-family: var(--font-display); }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: #10b981;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      z-index: 9999;
+      display: none;
+      box-shadow: 0 8px 32px rgba(16,185,129,0.4);
+      animation: toastIn 0.3s ease;
+    }
+    @keyframes toastIn { from { opacity:0; transform: translateY(-10px); } to { opacity:1; transform:none; } }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 400px) {
+      .styles-grid { grid-template-columns: 1fr; }
+      .hero-title { letter-spacing: -1px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div id="toast" class="toast"></div>
+
+<!-- ─── LANDING ─── -->
+<div id="screen-landing" class="screen active">
+  <div class="badge">Sistema v1.0.0 · Deploy 2026</div>
+
+  <h1 class="hero-title">
+    Headshot<span>AI</span>
+  </h1>
+
+  <p class="hero-sub">
+    Transforme selfies simples em retratos<br>de estúdio profissional em segundos
+  </p>
+
+  <div class="styles-grid">
+    <div class="style-card" onclick="selectStyle('linkedin', this)">
+      <span class="style-icon">💼</span>
+      <div class="style-name">LinkedIn Pro</div>
+      <div class="style-desc">Iluminação formal de estúdio</div>
+    </div>
+    <div class="style-card" onclick="selectStyle('influencer', this)">
+      <span class="style-icon">📸</span>
+      <div class="style-name">Influencer</div>
+      <div class="style-desc">Bokeh moderno, luz natural</div>
+    </div>
+    <div class="style-card" onclick="selectStyle('studio', this)">
+      <span class="style-icon">✨</span>
+      <div class="style-name">Estúdio</div>
+      <div class="style-desc">Look editorial premium</div>
+    </div>
+  </div>
+
+  <button class="cta-btn" onclick="goTo('upload')">
+    Gerar prévia grátis <span class="arrow">→</span>
+  </button>
+
+  <div class="footer-strip">
+    <div class="footer-links">
+      <a href="#">Privacidade</a>
+      <a href="#">Termos</a>
+      <a href="#">Suporte</a>
+    </div>
+    <div class="footer-ver">SECURE ENTERPRISE DEPLOYMENT · 2026</div>
+  </div>
+</div>
+
+<!-- ─── UPLOAD ─── -->
+<div id="screen-upload" class="screen">
+  <button class="back-btn" onclick="goTo('landing')">← Voltar</button>
+
+  <div class="section-title">Envie suas fotos</div>
+
+  <label class="form-label" for="styleSelect">ESTILO DESEJADO</label>
+  <select id="styleSelect" class="form-select" onchange="checkReady()">
+    <option value="">Selecione um estilo...</option>
+    <option value="linkedin">💼 LinkedIn Pro</option>
+    <option value="influencer">📸 Influencer / Instagram</option>
+    <option value="studio">✨ Estúdio Premium</option>
+  </select>
+
+  <label class="form-label">SUAS FOTOS</label>
+  <div class="dropzone" id="dropzone"
+    ondragover="dragOver(event)"
+    ondragleave="dragLeave()"
+    ondrop="dropFiles(event)"
+    onclick="document.getElementById('fileInput').click()">
+    <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFiles(this.files)" style="display:none">
+    <div class="dz-icon-wrap">🖼️</div>
+    <div class="dz-text">Clique ou arraste aqui</div>
+    <div class="dz-hint" id="dz-hint">Mínimo 3 fotos · JPG ou PNG</div>
+  </div>
+
+  <div id="chips" class="file-chips"></div>
+
+  <div class="tip-box">
+    <strong>Dicas para melhor resultado:</strong> Use fotos com boa iluminação no rosto, olhe para a câmera e evite óculos. Quanto mais variadas as fotos, melhor o resultado.
+  </div>
+
+  <button class="cta-btn" id="genBtn" onclick="generate()" disabled style="width:100%;justify-content:center">
+    Gerar prévia grátis <span class="arrow">→</span>
+  </button>
+</div>
+
+<!-- ─── LOADING ─── -->
+<div id="screen-loading" class="screen">
+  <div class="spinner-ring"></div>
+  <div class="loading-title">IA processando...</div>
+  <div class="loading-sub">Isso leva alguns segundos</div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="loading-steps">
+    <div class="loading-step" id="step1"><div class="step-dot"></div>Analisando suas fotos</div>
+    <div class="loading-step" id="step2"><div class="step-dot"></div>Aplicando iluminação de estúdio</div>
+    <div class="loading-step" id="step3"><div class="step-dot"></div>Refinando detalhes finais</div>
+  </div>
+</div>
+
+<!-- ─── PREVIEW ─── -->
+<div id="screen-preview" class="screen">
+  <div class="success-pill">Prévia gerada com sucesso</div>
+  <div class="preview-title">Seu retrato ficou incrível!</div>
+  <div class="preview-sub">Desbloqueie em HD sem marca d'água</div>
+
+  <div class="preview-img-wrap">
+    <img
+      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=600&fit=crop&crop=face"
+      alt="Prévia gerada pela IA"
+      id="previewImg"
+    >
+    <div class="watermark-overlay">
+      <div class="wm-badge">PRÉVIA · HEADSHOT AI</div>
+    </div>
+  </div>
+
+  <div class="pkg-section-label">ESCOLHA SEU PACOTE</div>
+
+  <div class="pkg-card">
+    <div>
+      <div class="pkg-name">5 retratos HD</div>
+      <div class="pkg-desc">Sem marca d'água · Alta resolução<br>Download imediato</div>
+    </div>
+    <div class="pkg-price">
+      <div class="pkg-price-main">R$39</div>
+      <div class="pkg-price-sub">por pacote</div>
+    </div>
+  </div>
+
+  <div class="pkg-card featured">
+    <div>
+      <div class="pkg-badge">MELHOR VALOR</div>
+      <div class="pkg-name">15 retratos HD</div>
+      <div class="pkg-desc">3 estilos diferentes · Variações<br>Prioridade na fila</div>
+    </div>
+    <div class="pkg-price">
+      <div class="pkg-price-main">R$79</div>
+      <div class="pkg-price-sub">por pacote</div>
+    </div>
+  </div>
+
+  <div class="pay-section">
+    <button class="pay-btn pay-pix" onclick="copyPix()">
+      💳 Pagar via Pix — R$39
+    </button>
+    <button class="pay-btn pay-whats" onclick="openWhats()">
+      📱 Enviar comprovante no WhatsApp
+    </button>
+  </div>
+
+  <div class="how-it-works">
+    <strong>Como funciona:</strong><br>
+    1. Copie a chave Pix e faça o pagamento<br>
+    2. Envie o comprovante no WhatsApp<br>
+    3. Receba os arquivos HD em até 10 minutos
+  </div>
+
+  <button class="back-btn" style="margin-top:1.75rem;width:100%;justify-content:center;display:flex" onclick="goTo('landing')">
+    ← Gerar nova prévia
+  </button>
+</div>
+
+<script>
+  // ─── CONFIG (edite aqui) ───────────────────────────────
+  var PIX_KEY = '11999999999';           // ← sua chave Pix
+  var WHATSAPP_NUMBER = '5511999999999'; // ← seu WhatsApp (com DDI e DDD, sem espaços)
+  // ──────────────────────────────────────────────────────
+
+  var files = [];
+  var selectedStyle = '';
+
+  function goTo(screenId) {
+    document.querySelectorAll('.screen').forEach(function(el) {
+      el.classList.remove('active');
+    });
+    document.getElementById('screen-' + screenId).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function selectStyle(val, el) {
+    document.querySelectorAll('.style-card').forEach(function(c) {
+      c.classList.remove('selected');
+    });
+    el.classList.add('selected');
+    selectedStyle = val;
+    var sel = document.getElementById('styleSelect');
+    if (sel) sel.value = val;
+    checkReady();
+  }
+
+  function handleFiles(fl) {
+    files = Array.from(fl);
+    var chips = document.getElementById('chips');
+    chips.innerHTML = '';
+    files.forEach(function(f) {
+      var c = document.createElement('div');
+      c.className = 'chip';
+      c.textContent = f.name.length > 22 ? f.name.substring(0, 20) + '…' : f.name;
+      chips.appendChild(c);
+    });
+    var hint = document.getElementById('dz-hint');
+    hint.textContent = files.length + ' foto(s) selecionada(s)' + (files.length < 3 ? ' — precisa de ' + (3 - files.length) + ' mais' : ' ✓');
+    checkReady();
+  }
+
+  function dragOver(e) {
+    e.preventDefault();
+    document.getElementById('dropzone').classList.add('over');
+  }
+  function dragLeave() {
+    document.getElementById('dropzone').classList.remove('over');
+  }
+  function dropFiles(e) {
+    e.preventDefault();
+    dragLeave();
+    handleFiles(e.dataTransfer.files);
+  }
+
+  function checkReady() {
+    var styleOk = (document.getElementById('styleSelect').value !== '') || selectedStyle !== '';
+    var ok = files.length >= 3 && styleOk;
+    document.getElementById('genBtn').disabled = !ok;
+  }
+
+  document.getElementById('styleSelect').addEventListener('change', function() {
+    selectedStyle = this.value;
+    checkReady();
+  });
+
+  function generate() {
+    goTo('loading');
+    // Reinicia a barra de progresso
+    var fill = document.getElementById('progressFill');
+    fill.style.animation = 'none';
+    fill.offsetHeight; // reflow
+    fill.style.animation = 'progressAnim 2.5s ease-in-out forwards';
+
+    // Anima os steps
+    var steps = ['step1', 'step2', 'step3'];
+    steps.forEach(function(id, i) {
+      document.getElementById(id).classList.remove('done');
+      setTimeout(function() {
+        document.getElementById(id).classList.add('done');
+      }, (i + 1) * 700);
+    });
+
+    setTimeout(function() {
+      goTo('preview');
+    }, 2800);
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(function() { t.style.display = 'none'; }, 3000);
+  }
+
+  function copyPix() {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(PIX_KEY).then(function() {
+        showToast('✓ Chave Pix copiada: ' + PIX_KEY);
+      }).catch(function() {
+        fallbackCopy();
+      });
+    } else {
+      fallbackCopy();
+    }
+  }
+
+  function fallbackCopy() {
+    var el = document.createElement('textarea');
+    el.value = PIX_KEY;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('✓ Chave Pix copiada: ' + PIX_KEY);
+  }
+
+  function openWhats() {
+    var msg = encodeURIComponent('Olá! Gostei da minha prévia no HeadshotAI e quero comprar o pacote. Segue o comprovante do Pix!');
+    window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + msg, '_blank');
+  }
+</script>
+</body>
+</html>
